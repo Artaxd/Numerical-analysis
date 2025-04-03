@@ -28,10 +28,32 @@ class eqAprox:
         self.method = method
 
     def bisection_method(self, error=float("1e-2")):
-        return
+        a = 0
+        b = 3
+        xn = (a+b)/2
+        while np.abs(self.func(xn)) > error:
+            if self.func(xn) * self.func(a) < 0:
+                b = xn
+            else:
+                a = xn
+            print(f"a = {a}, b = {b}, xn = {xn}, y = {self.func(xn)}")
+            xn = (a+b)/2
+
+        print(f"a = {a}, b = {b}, xn = {xn}, y = {self.func(xn)}")
+        return xn
     
     def iterative_method(self, error=float("1e-3")):
-        return
+        def g(x):
+            return (6 - np.cos(x))/3
+        
+        xn = g(0)
+        while np.abs(self.func(xn)) > error:
+            print(f"xn = {xn}, f(xn) = {self.func(xn)}")
+            xn = g(xn)
+
+        print(f"xn = {xn}, f(xn) = {self.func(xn)}")
+
+        return xn
     
     def newtons_method(self, error=float("1e-3")):
         #initial guess
@@ -54,10 +76,32 @@ class eqAprox:
         return xn
 
     def method_of_chords(self, error=float("1e-3")):
-        return
+        a = 0
+        b = 3
+        xn = a - (b-a)*(self.func(a))/(self.func(b) - self.func(a))
+        while np.abs(self.func(xn)) > error:
+            if self.func(xn) * self.func(a) < 0:
+                b = xn
+            else:
+                a = xn
+            print(f"a = {a}, b = {b}, xn = {xn}, y = {self.func(xn)}")
+            xn = a - (b-a)*(self.func(a)/(self.func(b) - self.func(a)))
+
+        print(f"a = {a}, b = {b}, xn = {xn}, y = {self.func(xn)}")
+        return xn
     
     def secant_method(self, error=float("1e-3")):
-        return
+        x0 = 0
+        xn = 3
+        while np.abs(self.func(xn)) > error:
+            print(f"xn = {xn}, f(xn) = {self.func(xn)}")
+            temp = xn
+            xn = xn - self.func(xn)*((xn - x0)/(self.func(xn) - self.func(x0)))
+            x0 = temp
+
+        print(f"xn = {xn}, f(xn) = {self.func(xn)}")
+
+        return xn
     
     def solve(self):
         match self.method:
@@ -75,6 +119,6 @@ class eqAprox:
                 print("wrong method")
 
 
-ea = eqAprox(f, f_prime)
+ea = eqAprox(f, f_prime, method="sec")
 
 ea.solve()
